@@ -1,4 +1,5 @@
 import {AxiosRequestConfig} from "axios";
+import {IAuthService} from "core/services/auth";
 
 export interface IHttpService {
     getUrl(url: string, mock?: boolean): string;
@@ -17,5 +18,5 @@ export interface IHttpServiceClientOptions {
 export interface IHttpServiceOptions {
     baseURL: string;
     mockBaseURL: string;
-    // authService?: IAuthService;
+    authService?: IAuthService;
 }

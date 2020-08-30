@@ -5,90 +5,76 @@ import Form, {
     FormHeader,
     FormFooter,
     Field,
-    ErrorMessage,
 } from '@atlaskit/form';
-import './Login.scss';
-import {sleep} from "shared/utils/sleep";
 import {PasswordField} from "shared/components/Form";
 import Space from "shared/components/Space";
+import {authDispatch} from "features/auth/auth.slice";
+import {useDispatch, useSelector} from "react-redux";
+import {RootState} from "../../../store/rootReducer";
+import SectionMessage from "@atlaskit/section-message";
 type IFormLogin = {
-    username: string,
+    email: string,
     password: string,
     remember: boolean
 }
-const Header = () => {
-    return (
-        <header>
-            <div className="logo">
-                <img
-                    height={80}
-                    src="https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcSiwDK-ICxwdNAWjjWiT5hU4efShwJQIFS45Q&usqp=CAU"
-                    alt="Logo"/>
-            </div>
-        </header>
-    );
-};
-const LoginPage = (props: {}) => {
+const LoginPage = () => {
+    const {
+       error,
+       loading,
+    } = useSelector((state: RootState) => state.auth);
+    const dispatch = useDispatch();
     function onSubmit(data: IFormLogin) {
-        return sleep(2000)
-            .then(() =>  {
-                return {
-                    username: 'USER_NAME'
-                } as IFormLogin;
-            },
-        );
+        dispatch(authDispatch(data));
     }
   return (
-      <div className="login__page" {...props}>
-          <Header/>
-          <section role="main">
-              <Form<IFormLogin>
-                  onSubmit={onSubmit}>
-                  {({ formProps, submitting }) => (
-                      <form {...formProps}>
-                          <FormHeader>
-                              <h3 className={'center'}>Login to your account</h3>
-                          </FormHeader>
-                          <Field
-                              name="username"
-                              isRequired
-                              defaultValue=""
-                          >
-                              {({ fieldProps, error }) => (
-                                  <Fragment>
-                                      <TextField
-                                          placeholder={'Enter Email'}
-                                          autoFocus={true}
-                                          autoComplete="off"
-                                          {...fieldProps} />
-                                      {error && (
-                                          <ErrorMessage>
-                                              This user name is already in use, try another one.
-                                          </ErrorMessage>
-                                      )}
-                                  </Fragment>
-                              )}
-                          </Field>
-                          <Space height={'1rem'}/>
-                          <Field
-                              name="password"
-                              defaultValue=""
-                              isRequired
-                          >
-                              {({ fieldProps }) => <PasswordField
-                                  {...fieldProps}
-                              />}
-                          </Field>
-                          <FormFooter >
-                              <Button shouldFitContainer type="submit" appearance="primary" isLoading={submitting}>
-                                  Sign up
-                              </Button>
-                          </FormFooter>
-                      </form>
+      <Form<IFormLogin>
+          onSubmit={onSubmit}>
+          {({ formProps }) => (
+              <form {...formProps}>
+                  <FormHeader>
+                      <h3 className={'center'}>Login to your account</h3>
+                  </FormHeader>
+                  <Field
+                      name="email"
+                      isRequired
+                      defaultValue=""
+                  >
+                      {({ fieldProps }) => (
+                          <Fragment>
+                              <TextField
+                                  placeholder={'Enter Email'}
+                                  autoFocus={true}
+                                  autoComplete="off"
+                                  {...fieldProps} />
+                          </Fragment>
+                      )}
+                  </Field>
+                  <Space height={'1rem'}/>
+                  <Field
+                      name="password"
+                      defaultValue=""
+                      isRequired
+                  >
+                      {({ fieldProps }) => <PasswordField
+                          {...fieldProps}
+                      />}
+                  </Field>
+                  <Space height={'1rem'}/>
+                  {error && (
+                      <SectionMessage
+                          appearance={'error'}>
+                          {error}
+                      </SectionMessage>
                   )}
-              </Form>
-          </section>
-      </div>
+                  <FormFooter >
+                      <Button shouldFitContainer type="submit" appearance="primary" isLoading={loading}>
+                          Sign up
+                      </Button>
+                      <hr/>
+                  </FormFooter>
+              </form>
+          )}
+      </Form>
   )
 };
 export default LoginPage;

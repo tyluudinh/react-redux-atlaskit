@@ -6,7 +6,7 @@ export interface IAuthHttpClient {
 }
 export function AuthHttpClient(option: IHttpServiceClientOptions): IAuthHttpClient {
     function login(data: any): Promise<any> {
-        const url = option.httpService.getUrl('/login', option.mock);
+        const url = option.httpService.getUrl('/api/login', option.mock);
         return option.httpService.post(url, data);
     }
     function signUp(data: any): Promise<any> {

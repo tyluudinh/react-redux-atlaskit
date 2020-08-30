@@ -1,5 +1,6 @@
-import { configureStore } from '@reduxjs/toolkit';
-import rootReducer from './rootReducer';
+import { configureStore, Action } from '@reduxjs/toolkit';
+import { ThunkAction } from 'redux-thunk'
+import rootReducer, {RootState} from './rootReducer';
 const appStore = configureStore({
     reducer: rootReducer
 });
@@ -9,6 +10,7 @@ if (process.env.NODE_ENV === 'development' && (module as any).hot) {
         appStore.replaceReducer(newRootReducer)
     })
 }
+export type AppThunk = ThunkAction<void, RootState, null, Action<string>>
 export type AppDispatch = typeof appStore.dispatch
 
 export default appStore;

@@ -14,7 +14,8 @@ export function HttpService(option: IHttpServiceOptions): IHttpService {
     async function request<T = any>(config: AxiosRequestConfig): Promise<T> {
         // Todo get auth token from store
 
-        const authorization = null;
+        // @ts-ignore
+        const authorization = option.authService.getStoredAuthToken();
         const configRequest: AxiosRequestConfig = {
             ...config,
             headers: {
