@@ -1,5 +1,9 @@
 export interface IAuthService {
-    getStoredAuthToken(): string | null
-    storeAuthToken: (token: string) => void;
-    removeStoredAuthToken: () => void;
+    storeAuthenticate: (model: IAuthTokenModel) => void;
+    removeStoredAuthenticate: () => void;
+    getStoredAuthenticate: IAuthTokenModel
+}
+export interface IAuthTokenModel {
+    accessToken: string,
+    userId: number | string;
 }

@@ -18,5 +18,5 @@ export interface IHttpServiceClientOptions {
 export interface IHttpServiceOptions {
     baseURL: string;
     mockBaseURL: string;
-    authService?: IAuthService;
+    authService: IAuthService;
 }

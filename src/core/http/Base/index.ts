@@ -1,6 +1,5 @@
 import axios, {AxiosRequestConfig, AxiosResponse} from 'axios';
 import {IHttpService, IHttpServiceOptions} from "./type";
-
 export function HttpService(option: IHttpServiceOptions): IHttpService {
     const HTTP = axios.create({
         headers: {
@@ -15,14 +14,21 @@ export function HttpService(option: IHttpServiceOptions): IHttpService {
         // Todo get auth token from store
 
         // @ts-ignore
-        const authorization = option.authService.getStoredAuthToken();
         const configRequest: AxiosRequestConfig = {
             ...config,
             headers: {
                 ...config.headers,
-                authorization
             }
         };
+        const {accessToken, userId} = option.authService.getStoredAuthenticate;
+        if (accessToken && userId) {
+            configRequest.headers['authorization'] = accessToken;
+            configRequest.params = {
+                token: accessToken,
+                userID: userId,
+                ...configRequest.params
+            }
+        }
         let response: AxiosResponse;
         try {
             response = await HTTP.request<T>(configRequest);
@@ -33,7 +39,10 @@ export function HttpService(option: IHttpServiceOptions): IHttpService {
             case 200:
             case 201:
             case 204:
-                return response.data;
+                if (response.data.success) {
+                    return response.data;
+                }
+                return Promise.reject({error: response.data.message});
             case 400:
             case 401:
             case 403:

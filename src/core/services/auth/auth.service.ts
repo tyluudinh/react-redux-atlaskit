@@ -1,9 +1,18 @@
-import {IAuthService} from "./types";
+import {IAuthTokenModel, IAuthService} from "./types";
 
-export function AuthService(): IAuthService {
+export function AuthService(): IAuthService  {
     return {
-        getStoredAuthToken: () => localStorage.getItem('authToken'),
-        storeAuthToken: (token: string) => localStorage.setItem('authToken', token),
-        removeStoredAuthToken: () => localStorage.removeItem('authToken')
+        storeAuthenticate: (model: IAuthTokenModel) => {
+            localStorage.setItem('accessToken', model.accessToken);
+            localStorage.setItem('userId', model.userId.toString());
+        },
+        removeStoredAuthenticate: () => {
+            localStorage.removeItem('accessToken');
+            localStorage.removeItem('userId');
+        },
+        getStoredAuthenticate: {
+            accessToken: localStorage.getItem('accessToken'),
+            userId: localStorage.getItem('userId'),
+        } as IAuthTokenModel
     }
 }

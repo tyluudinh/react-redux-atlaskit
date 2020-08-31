@@ -10,7 +10,7 @@ import {PasswordField} from "shared/components/Form";
 import Space from "shared/components/Space";
 import {authDispatch} from "features/auth/auth.slice";
 import {useDispatch, useSelector} from "react-redux";
-import {RootState} from "../../../store/rootReducer";
+import {RootState} from "store/rootReducer";
 import SectionMessage from "@atlaskit/section-message";
 type IFormLogin = {
     email: string,
@@ -68,7 +68,7 @@ const LoginPage = () => {
                   )}
                   <FormFooter >
                       <Button shouldFitContainer type="submit" appearance="primary" isLoading={loading}>
-                          Sign up
+                          Sign in
                       </Button>
                       <hr/>
                   </FormFooter>

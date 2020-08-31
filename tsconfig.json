@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "target": "es5",
+    "target": "es6",
     "lib": [
       "es5",
       "es6",
@@ -31,7 +31,10 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "noEmit": true,
-    "jsx": "react"
+    "jsx": "react",
+    "noImplicitAny": false,
+    "noEmitOnError": true,
+    "removeComments": false
   },
   "include": [
     "src"
