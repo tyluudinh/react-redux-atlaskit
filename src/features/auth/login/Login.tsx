@@ -8,7 +8,7 @@ import Form, {
 } from '@atlaskit/form';
 import {PasswordField} from "shared/components/Form";
 import Space from "shared/components/Space";
-import {authDispatch} from "features/auth/auth.slice";
+import {AuthDispatch} from "features/auth/auth.slice";
 import {useDispatch, useSelector} from "react-redux";
 import {RootState} from "store/rootReducer";
 import SectionMessage from "@atlaskit/section-message";
@@ -24,7 +24,7 @@ const LoginPage = () => {
     } = useSelector((state: RootState) => state.auth);
     const dispatch = useDispatch();
     function onSubmit(data: IFormLogin) {
-        dispatch(authDispatch(data));
+        dispatch(AuthDispatch(data));
     }
   return (
       <Form<IFormLogin>

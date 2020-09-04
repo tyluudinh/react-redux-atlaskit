@@ -4,7 +4,7 @@ import {getAuthTokenModel} from "../../services/auth";
 export interface IAuthHttpClient {
     login(data: any): Promise<any>,
     signUp(data: any): Promise<any>,
-    getProfile(data: any): Promise<any>,
+    getProfile(): Promise<any>,
 }
 export function AuthHttpClient(option: IHttpServiceClientOptions): IAuthHttpClient {
     function login(data: any): Promise<any> {

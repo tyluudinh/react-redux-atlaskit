@@ -42,7 +42,7 @@ export function HttpService(option: IHttpServiceOptions): IHttpService {
                 if (response.data.success) {
                     return response.data;
                 }
-                return Promise.reject({error: response.data.message});
+                return Promise.reject(response.data.message);
             case 400:
             case 401:
             case 403:

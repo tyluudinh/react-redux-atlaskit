@@ -1,56 +1,29 @@
-import {createSlice, PayloadAction} from '@reduxjs/toolkit';
-import {
-    initialBaseApiState,
-    startLoading,
-    loadingFailed,
-    IBaseApiState
-} from "shared/models/base-api-state.model";
-import {AppThunk} from "store/appStore";
 import {VSSCHttpClient} from "core/http";
-import {IAuthTokenModel, getAuthTokenModel, VSSCAuth} from "core/services/auth";
-import {ObjectIsNull} from "../../shared/utils/object";
-import {IProfile} from "../../shared/models/profile.model";
-interface AuthState extends IBaseApiState<{}> {
-    authenticated: boolean,
-    authTokenModel: IAuthTokenModel,
-    currentUser: IBaseApiState<IProfile>
-}
+import {getAuthTokenModel, VSSCAuth} from "core/services/auth";
+import {ObjectIsNull} from "shared/utils/object";
+import {
+    createGenericSlice,
+    GenericState,
+    initialGenericState
+} from "store/helper";
+import {createAsyncThunk} from "@reduxjs/toolkit";
+interface AuthState extends GenericState<boolean> {}
 const initialAuthState: AuthState = {
-    ...initialBaseApiState({}),
-    authTokenModel: getAuthTokenModel,
-    authenticated: !ObjectIsNull(getAuthTokenModel),
-    currentUser: {
-        ...initialBaseApiState({} as IProfile)
-    }
+    ...initialGenericState(!ObjectIsNull(getAuthTokenModel))
 };
-const authSlice = createSlice({
+export const AuthDispatch = createAsyncThunk(
+    'authenticate',
+    async (payload: {}, {dispatch}) => {
+        const authResponse = await VSSCHttpClient.auth.login(payload);
+        VSSCAuth.storeAuthenticate(authResponse.data);
+        return authResponse.data;
+    }
+);
+export const authSlice = createGenericSlice({
     name: 'auth',
     initialState: initialAuthState,
-    reducers: {
-        getAuthStart: startLoading,
-        getAuthFailure: loadingFailed,
-        getAuthSuccess(state: AuthState, { payload }: PayloadAction<{}>) {
-            state.loading = false;
-            state.error = null;
-            state.data = payload;
-            state.authenticated = true;
-        },
-    }
+    reducers: {},
+    asyncThunk: AuthDispatch
 });
-export const {
-    getAuthStart,
-    getAuthSuccess,
-    getAuthFailure,
-} = authSlice.actions;
+
 export default authSlice.reducer;
-export const authDispatch = (payload: {}): AppThunk => async dispatch => {
-    try {
-        dispatch(getAuthStart());
-        const authResponse = await VSSCHttpClient.auth.login(payload);
-        dispatch(getAuthSuccess(authResponse));
-        VSSCAuth.storeAuthenticate(authResponse.data);
-    } catch (err) {
-        const { error } = err;
-        dispatch(getAuthFailure(error))
-    }
-};
